@@ -1,11 +1,14 @@
 package model.reports;
 
-import model.reports.Procedure;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ProcedureImpl implements Procedure {
     private String code;
     private int cost;
     private String description;
+    private Date dateCompleted;
 
     public ProcedureImpl() {
     }
@@ -38,6 +41,15 @@ public class ProcedureImpl implements Procedure {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Date getDateCompleted() {
+        return dateCompleted;
+    }
+
+    public void setDateCompleted(String dateCompleted) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("mm/dd/yyyy");
+        this.dateCompleted = dateFormat.parse(dateCompleted);
     }
 
     @Override

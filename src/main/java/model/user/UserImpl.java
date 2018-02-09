@@ -32,17 +32,6 @@ public class UserImpl extends PersonImpl implements User {
         this.password = password;
     }
 
-    public boolean logIn(String user, String pass){
-        return this.username.equals(user) && this.password.equals(pass);
-    }
-
-    public boolean changePassword(String pass, String newPass){
-        if (this.getPassword().equals(pass)){
-            this.setPassword(newPass);
-            return true;
-        }
-        return false;
-    }
 
 
 

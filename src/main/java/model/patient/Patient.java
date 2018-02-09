@@ -1,29 +1,30 @@
 package model.patient;
 
 import model.Person;
-import model.reports.ProcedureImpl;
+
 
 public interface Patient extends Person {
-    public String getPhone();
+    String getPhone();
 
-    public void setPhone(String phone);
+    void setPhone(String phone);
 
-    public String getEmail();
+    String getEmail();
 
-    public void setEmail(String email);
+    void setEmail(String email);
 
-    public InsuranceImpl getInsurance();
+    InsuranceImpl getInsurance();
 
-    public void setInsurance(InsuranceImpl insurance);
+    void setInsurance(InsuranceImpl insurance);
 
-    public long getCardNumber();
+    long getCardNumber();
 
-    public void setCardNumber(long cardNumber);
+    void setCardNumber(long cardNumber);
 
-    public ProcedureImpl[] getProcedures();
+    PatientAccount getAccount();
 
-    public void setProcedures(ProcedureImpl[] procedures);
+    void setAccount(PatientAccount account);
 
-    public String toString();
+
+    String toString();
 
 }

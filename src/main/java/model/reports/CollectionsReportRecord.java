@@ -1,38 +1,39 @@
 package model.reports;
 
-import java.util.Date;
+import java.util.Calendar;
+
 
 public class CollectionsReportRecord {
-    private Date date;
-    private int total;
+    private double total;
+    private Calendar date;
 
     public CollectionsReportRecord() {
     }
 
-    public CollectionsReportRecord(Date date, Procedure procedure, int cost) {
+    public CollectionsReportRecord(double total, Calendar date) {
+        this.setTotal(total);
         this.setDate(date);
-        this.setTotal(cost);
     }
 
-    public Date getDate() {
+    public Calendar getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Calendar date) {
         this.date = date;
     }
 
-    public int getTotal() {
+    public double getTotal() {
         return total;
     }
 
-    public void setTotal(int cost) {
+    public void setTotal(double cost) {
         this.total = cost;
     }
 
     @Override
     public String toString() {
-        return "Actual Charge: " + this.getTotal() + "\n" +
-                this.getDate();
+        return "Date: " + this.getDate() +"\n" +
+                "Total: " + this.getTotal() + "\n";
     }
 }

@@ -1,4 +1,6 @@
 package model.reports;
 
-public interface Procedure {
+import model.Savable;
+
+public interface Procedure extends Savable{
 }

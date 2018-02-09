@@ -1,6 +1,8 @@
 package model.patient;
 
-public interface Insurance {
+import java.io.Serializable;
+
+public interface Insurance extends Serializable{
 
     String getCompany();
 

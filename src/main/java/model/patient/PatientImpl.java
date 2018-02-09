@@ -8,7 +8,7 @@ public class PatientImpl extends PersonImpl implements Patient {
     private String email;
     private InsuranceImpl insurance;
     private long cardNumber;
-    private ProcedureImpl[] procedures;
+    private PatientAccount account;
 
     public PatientImpl() {
     }
@@ -17,6 +17,7 @@ public class PatientImpl extends PersonImpl implements Patient {
         super(firstName, lastName, userID);
         this.phone = phone;
         this.email = email;
+        this.account = new PatientAccount();
     }
 
     public String getPhone() {
@@ -51,14 +52,13 @@ public class PatientImpl extends PersonImpl implements Patient {
         this.cardNumber = cardNumber;
     }
 
-    public ProcedureImpl[] getProcedures() {
-        return procedures;
+    public PatientAccount getAccount() {
+        return account;
     }
 
-    public void setProcedures(ProcedureImpl[] procedures) {
-        this.procedures = procedures;
+    public void setAccount(PatientAccount account) {
+        this.account = account;
     }
-
 
     @Override
     public String toString() {

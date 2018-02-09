@@ -1,10 +1,8 @@
 <component name="ArtifactManager">
-  <artifact name="dentistapp:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/dentistapp_jar</output-path>
-    <root id="root">
-      <element id="archive" name="dentistapp.jar">
-        <element id="module-output" name="dentistapp" />
-      </element>
+  <artifact type="jar" name="dentistapp:jar">
+    <output-path>$MAVEN_REPOSITORY$</output-path>
+    <root id="archive" name="dentistapp.jar">
+      <element id="module-output" name="dentistapp" />
     </root>
   </artifact>
 </component>

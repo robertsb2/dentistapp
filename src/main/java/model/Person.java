@@ -1,21 +1,23 @@
 package model;
 
-public interface Person {
-    public int getUserID();
+import java.io.Serializable;
 
-    public void setUserID(int userID);
+public interface Person extends Savable{
+    int getUserID();
 
-    public String getFirstName();
+    void setUserID(int userID);
 
-    public void setFirstName(String firstName);
+    String getFirstName();
 
-    public String getLastName();
+    void setFirstName(String firstName);
 
-    public void setLastName(String lastName);
+    String getLastName();
+
+    void setLastName(String lastName);
 
     @Override
-    public boolean equals(Object o);
+    boolean equals(Object o);
 
     @Override
-    public String toString();
+    String toString();
 }

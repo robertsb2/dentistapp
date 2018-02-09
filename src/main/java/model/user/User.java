@@ -10,6 +10,4 @@ public interface User extends Person {
     String getPassword();
 
     void setPassword(String password);
-
-    boolean logIn(String user, String pass);
 }

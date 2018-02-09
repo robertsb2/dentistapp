@@ -1,16 +1,29 @@
 package model.user;
 
-import model.Person;
 
-public interface AdminUser extends Person {
+public interface AdminUser extends User {
 
-    public String getUsername();
+    String getUsername();
 
-    public void setUsername(String username);
+    void setUsername(String username);
 
-    public String getPassword();
+    String getPassword();
 
-    public void setPassword(String password);
+    void setPassword(String password);
 
-    boolean changePassword(String pass, String newPass, User user);
+    int getUserID();
+
+    void setUserID(int userID);
+
+    String getFirstName();
+
+    void setFirstName(String firstName);
+
+    String getLastName();
+
+    void setLastName(String lastName);
+
+    boolean equals(Object o);
+
+    String toString();
 }

@@ -1,6 +1,6 @@
 package model;
 
-public class PersonImpl {
+public class PersonImpl implements Person{
     private String firstName;
     private String lastName;
     private int userID;
