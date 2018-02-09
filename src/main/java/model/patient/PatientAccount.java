@@ -1,13 +1,12 @@
 package model.patient;
 
-import model.Savable;
 import model.reports.Procedure;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class PatientAccount {
+public class PatientAccount implements Serializable {
     private HashMap<Procedure,Double> proceduresCompleted = new HashMap<Procedure, Double>();
     private ArrayList<Payment> paymentList = new ArrayList<Payment>();
     private double balance;

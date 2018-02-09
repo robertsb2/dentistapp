@@ -1,6 +1,6 @@
 package model.reports;
 
-import model.Savable;
+import java.io.Serializable;
 
-public interface Procedure extends Savable{
+public interface Procedure extends Serializable {
 }

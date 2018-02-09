@@ -40,10 +40,4 @@ public class ProductionReportRecord {
         this.cost = cost;
     }
 
-    @Override
-    public String toString() {
-        return this.getProcedure().toString() + "\n" +
-                "Actual Charge: " + this.getCost() + "\n" +
-                this.getDate();
-    }
 }

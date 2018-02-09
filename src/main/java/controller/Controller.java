@@ -1,7 +1,7 @@
 package controller;
 
 
-import model.Person;
+
 import model.patient.Patient;
 import model.patient.Payment;
 import model.provider.Provider;
@@ -11,18 +11,16 @@ import model.reports.Procedure;
 import model.user.AdminUser;
 import model.user.AdminUserFactory;
 import model.user.User;
-
 import java.io.*;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class Controller {
 
     private String filename = "data.sav";
-    private ArrayList<Serializable> data = new ArrayList<Serializable>();
+    private ArrayList data = new ArrayList();
     private ArrayList<User> users = new ArrayList<User>();
     private ArrayList<Patient> patients = new ArrayList<Patient>();
     private ArrayList<Provider> providers = new ArrayList<Provider>();
@@ -51,7 +49,7 @@ public class Controller {
         currentUser.setUsername("Administrator");
         currentUser.setPassword("1234Password");
         users.add(currentUser);
-        save();
+//        save();
 
     }
 
@@ -60,7 +58,7 @@ public class Controller {
         data.add(users);
         data.add(patients);
         data.add(providers);
-        data.add(providers);
+        data.add(procedures);
         out.writeObject(data);
         System.out.println("Save Runs");
     }
@@ -177,32 +175,70 @@ public class Controller {
     }
 
     public CollectionsReport getCollectionsReport(String start, String end, String sortType) throws ParseException {
-        double total = 0;
         CollectionsReport report = new CollectionsReport(start,end,sortType);
         if (report.getGrouping().equalsIgnoreCase("day")) {
-            for (Calendar date = report.getStartDate(); date.before(report.getEndDate()); date.add(Calendar.DAY_OF_MONTH,1)) {
+            for (LocalDate date = report.getStartDate(); date.isBefore(report.getEndDate()); date = getValidDate(date)) {
+                System.out.println("Date: " + date);
+                double total = 0;
                 for (Patient patient : patients) {
+                    System.out.println(patient + "\n");
                     for (Payment payment : patient.getAccount().getPaymentList()) {
-                        total += payment.getAmount();
-                        if (payment.getDate().after(report.getStartDate()) && payment.getDate().before(report.getEndDate())) {
-                            report.add(new CollectionsReportRecord(total,date));
+                        System.out.println(payment + "\n");
+                        if (date.isEqual(payment.getDate())) {
+                            System.out.println("Running");
+                            total += payment.getAmount();
+
+
                         }
                     }
                 }
+                report.add(new CollectionsReportRecord(total,date));
             }
         }
-        System.out.println(report);
+        for (CollectionsReportRecord record : report){
+            System.out.println(record);
+        }
         return report;
     }
 
 
-
-
-
-
-
-
-
-
+    public LocalDate getValidDate(LocalDate date) {
+        LocalDate validDate = date;
+        switch (date.getMonth().getValue()){
+            case 1:
+            case 3:
+            case 5:
+            case 7:
+            case 8:
+            case 10:
+            case 12:
+                if (date.getDayOfMonth() >= 31){
+                    validDate = LocalDate.of(date.getYear(),date.getMonth(),date.getDayOfMonth()+1);
+                } else {
+                    validDate = LocalDate.of(date.getYear(),date.getMonth(),1);
+                }
+                break;
+            case 4:
+            case 6:
+            case 9:
+            case 11:
+                if (date.getDayOfMonth() < 30){
+                    validDate = LocalDate.of(date.getYear(),date.getMonth(),date.getDayOfMonth()+1);
+                } else {
+                    validDate = LocalDate.of(date.getYear(),date.getMonth(),1);
+                }
+                break;
+            case 2:
+                if (date.getDayOfMonth() < 29 && date.isLeapYear()){
+                    validDate = LocalDate.of(date.getYear(),date.getMonth(),date.getDayOfMonth()+1);
+                } else if(date.getDayOfMonth() < 28){
+                    validDate = LocalDate.of(date.getYear(),date.getMonth(),date.getDayOfMonth() + 1);
+                } else {
+                    validDate = LocalDate.of(date.getYear(),date.getMonth(),1);
+                }
+                break;
+        }
+        return validDate;
+    }
 }
 

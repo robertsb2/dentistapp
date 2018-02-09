@@ -2,6 +2,8 @@ package model.user;
 
 import model.Person;
 
+import java.io.Serializable;
+
 public interface User extends Person {
     String getUsername();
 

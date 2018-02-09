@@ -1,7 +1,7 @@
 package model.patient;
 
 import model.PersonImpl;
-import model.reports.ProcedureImpl;
+
 
 public class PatientImpl extends PersonImpl implements Patient {
     private String phone;
@@ -74,7 +74,7 @@ public class PatientImpl extends PersonImpl implements Patient {
         } else {
             card = "Yes";
         }
-        return super.toString() + "\n" +
+        return super.toString() +
                 "Phone: " + this.getPhone() + "\n" +
                 "Email: " + this.getPhone() + "\n" +
                 "Insurance: " + ins + "\n" +

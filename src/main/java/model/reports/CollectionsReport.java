@@ -1,15 +1,14 @@
 package model.reports;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 public class CollectionsReport extends ArrayList<CollectionsReportRecord>{
-    private Calendar startCal = Calendar.getInstance();
-    private Calendar endCal = Calendar.getInstance();
+    private LocalDate startCal;
+    private LocalDate endCal;
     private String grouping;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("mm/dd/yyyy");
 
     public CollectionsReport() {
     }
@@ -20,7 +19,7 @@ public class CollectionsReport extends ArrayList<CollectionsReportRecord>{
         this.setGrouping(grouping);
     }
 
-    public Calendar getStartDate() {
+    public LocalDate getStartDate() {
         return startCal;
     }
 
@@ -28,12 +27,14 @@ public class CollectionsReport extends ArrayList<CollectionsReportRecord>{
       this.startCal = format(sDate);
     }
 
-    public Calendar getEndDate() {
+    public LocalDate getEndDate() {
         return endCal;
     }
 
     public void setEndDate(String eDate) throws ParseException {
-        this.endCal =  format(eDate);
+        LocalDate temp = format(eDate);
+        temp = LocalDate.of(temp.getYear(),temp.getMonth(),temp.getDayOfMonth() +1);
+        this.endCal = temp;
     }
 
     public String getGrouping() {
@@ -44,15 +45,12 @@ public class CollectionsReport extends ArrayList<CollectionsReportRecord>{
         this.grouping = grouping;
     }
 
-    private Calendar format(String date){
-        Calendar temp = Calendar.getInstance();
+    private LocalDate format(String date){
         String[] raw = date.split("/");
-        int day = Integer.parseInt(raw[0]);
-        int month = Integer.parseInt(raw[1]);
+        int month = Integer.parseInt(raw[0]);
+        int day = Integer.parseInt(raw[1]);
         int year = Integer.parseInt(raw[2]);
-        temp.set(Calendar.DAY_OF_MONTH,day);
-        temp.set(Calendar.MONTH,month);
-        temp.set(Calendar.YEAR,year);
+        LocalDate temp = LocalDate.of(year,month,day);
         return temp;
     }
 

@@ -2,7 +2,7 @@ package model;
 
 import java.io.Serializable;
 
-public interface Person extends Savable{
+public interface Person extends Serializable {
     int getUserID();
 
     void setUserID(int userID);

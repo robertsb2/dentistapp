@@ -2,6 +2,7 @@ package model.patient;
 
 import model.Person;
 
+import java.io.Serializable;
 
 public interface Patient extends Person {
     String getPhone();

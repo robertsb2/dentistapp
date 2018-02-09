@@ -9,7 +9,8 @@ import model.user.User;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Calendar;
+import java.time.LocalDate;
+
 
 public class TestDriver {
     static Controller controller = new Controller();
@@ -27,11 +28,11 @@ public class TestDriver {
         }
 
         for (int i = 0; i < 5; i++) {
-            Calendar test = Calendar.getInstance();
+            LocalDate test = LocalDate.of(2018,2,i+1);
             Patient temp = PatientFactory.getInstance();
+            temp.setFirstName("Patient " + i);
             PatientAccount account = new PatientAccount();
-            test.set(Calendar.DAY_OF_MONTH, i);
-            account.addPayment(new Payment(25 + i,"Patient",test));
+            account.addPayment(new Payment(25,"Patient",test));
             temp.setAccount(account);
             controller.addPatient(temp);
         }

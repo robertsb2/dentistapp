@@ -1,10 +1,11 @@
 package model.reports;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ProcedureImpl implements Procedure {
+public class ProcedureImpl implements Procedure, Serializable{
     private String code;
     private int cost;
     private String description;
