@@ -4,13 +4,13 @@ import model.patient.Patient;
 import model.reports.Procedure;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public interface Appointment extends Serializable {
-    LocalDate getDate();
+    LocalDateTime getDate();
 
-    void setDate(LocalDate date);
+    void setDate(LocalDateTime date);
 
     Patient getPatient();
 

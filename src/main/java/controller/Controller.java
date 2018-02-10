@@ -525,9 +525,9 @@ public class Controller {
         throw new NullPointerException("Patient not found");
     }
 
-    public Appointment getAppointment(int id) {
+    public Appointment getAppointment(LocalDateTime localDateTime) {
         for (Appointment appointment : appointments){
-            if (appointment.getPatient().getUserID() == id){
+            if (appointment.getDate().isEqual(localDateTime)){
                 return appointment;
 
             }

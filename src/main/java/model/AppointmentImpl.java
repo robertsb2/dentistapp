@@ -4,28 +4,28 @@ import model.patient.Patient;
 import model.reports.Procedure;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class AppointmentImpl implements Appointment, Serializable {
-    private LocalDate date;
+    private LocalDateTime date;
     private Patient patient;
     private ArrayList<Procedure> procedures;
 
     public AppointmentImpl() {
     }
 
-    public AppointmentImpl(LocalDate date, Patient patient,Procedure procedure) {
+    public AppointmentImpl(LocalDateTime date, Patient patient, Procedure procedure) {
         this.setDate(date);
         this.setPatient(patient);
         this.addProcedure(procedure);
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

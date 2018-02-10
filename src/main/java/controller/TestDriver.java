@@ -15,6 +15,8 @@ import model.user.UserFactory;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 
 public class TestDriver {
@@ -45,10 +47,19 @@ public class TestDriver {
         setCurrentAppointment();
         editInfo();
         searches();
+        addPayments();
         getReports();
 
 
 
+    }
+
+    private static void addPayments() {
+        currentPatient.setInsurance(InsuranceFactory.getInstance("Aetna",431431,5415425));
+        currentPatient.setCardNumber(6786678697973453L);
+
+        currentPatient.getAccount().addProcedure(ProcedureFactory.getInstance("D00123",4500,"Tooth Extraction",LocalDate.of(2018,2,7)),4000);
+        currentPatient.getAccount().addPayment(new Payment(3800,"Insurance",LocalDate.now()));
     }
 
     private static void getReports() {
@@ -87,7 +98,7 @@ public class TestDriver {
     }
 
     public static void setCurrentAppointment() {
-        currentAppointment = controller.getAppointment(103);
+        currentAppointment = controller.getAppointment(LocalDateTime.of(LocalDate.of(2018,2,12), LocalTime.of(12,30)));
     }
 
     private static void testUserAccess() {
@@ -129,12 +140,12 @@ public class TestDriver {
         Provider prov5 = ProviderFactory.getInstance("Amanda","Lee",805,"Dental Assistant");
         Provider prov6 = ProviderFactory.getInstance("Test","Name",806,"Title");
 
-        Appointment app1 = AppointmentFactory.getInstance(LocalDate.of(2018,2,12),pat1,pro1);
-        Appointment app2 = AppointmentFactory.getInstance(LocalDate.of(2018,2,12),pat2,pro2);
-        Appointment app3 = AppointmentFactory.getInstance(LocalDate.of(2018,2,12),pat3,pro3);
-        Appointment app4 = AppointmentFactory.getInstance(LocalDate.of(2018,2,12),pat4,pro4);
-        Appointment app5 = AppointmentFactory.getInstance(LocalDate.of(2018,2,12),pat5,pro5);
-        Appointment app6 = AppointmentFactory.getInstance(LocalDate.of(2018,2,12),pat6,pro6);
+        Appointment app1 = AppointmentFactory.getInstance(LocalDate.of(2018,2,10).atTime(12,30),pat1,pro1);
+        Appointment app2 = AppointmentFactory.getInstance(LocalDate.of(2018,2,11).atTime(2,15),pat2,pro2);
+        Appointment app3 = AppointmentFactory.getInstance(LocalDate.of(2018,2,12).atTime(9,0),pat3,pro3);
+        Appointment app4 = AppointmentFactory.getInstance(LocalDate.of(2018,2,13).atTime(11,45),pat4,pro4);
+        Appointment app5 = AppointmentFactory.getInstance(LocalDate.of(2018,2,14).atTime(3,15),pat5,pro5);
+        Appointment app6 = AppointmentFactory.getInstance(LocalDate.of(2018,2,15).atTime(2,0),pat6,pro6);
 
 
         controller.changePassword(currentUser, "Ch33d@r");
