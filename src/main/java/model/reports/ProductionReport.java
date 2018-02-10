@@ -1,35 +1,38 @@
 package model.reports;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class ProductionReport extends ArrayList<ProductionReportRecord> {
-    private String startDate;
-    private String endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String grouping;
 
     public ProductionReport() {
     }
 
-    public ProductionReport(String startDate, String endDate, String grouping) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.grouping = grouping;
+    public ProductionReport(LocalDate startDate, LocalDate endDate, String grouping) {
+        this.setStartDate(startDate);
+        this.setEndDate(endDate);
+        this.setGrouping(grouping);
     }
 
-    public String getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
+    public void setEndDate(LocalDate endDate) {
+        LocalDate temp = endDate;
+        temp = LocalDate.of(temp.getYear(),temp.getMonth(),temp.getDayOfMonth() +1);
+        this.endDate = temp;
     }
 
     public String getGrouping() {
@@ -39,4 +42,5 @@ public class ProductionReport extends ArrayList<ProductionReportRecord> {
     public void setGrouping(String grouping) {
         this.grouping = grouping;
     }
+
 }

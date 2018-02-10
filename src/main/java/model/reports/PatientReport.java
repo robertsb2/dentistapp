@@ -1,5 +1,7 @@
 package model.reports;
 
-public class PatientReport {
+import java.util.ArrayList;
+
+public class PatientReport extends ArrayList<PatientReportRecord>{
 
 }

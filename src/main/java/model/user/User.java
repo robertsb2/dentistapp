@@ -12,4 +12,7 @@ public interface User extends Person {
     String getPassword();
 
     void setPassword(String password);
+
+    @Override
+    String toString();
 }

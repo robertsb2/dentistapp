@@ -2,8 +2,6 @@ package model.patient;
 
 import model.Person;
 
-import java.io.Serializable;
-
 public interface Patient extends Person {
     String getPhone();
 
@@ -13,9 +11,9 @@ public interface Patient extends Person {
 
     void setEmail(String email);
 
-    InsuranceImpl getInsurance();
+    Insurance getInsurance();
 
-    void setInsurance(InsuranceImpl insurance);
+    void setInsurance(Insurance insurance);
 
     long getCardNumber();
 

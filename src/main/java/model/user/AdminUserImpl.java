@@ -15,4 +15,8 @@ public class AdminUserImpl extends UserImpl implements AdminUser {
         super(firstName, lastName, userID, username, password);
     }
 
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

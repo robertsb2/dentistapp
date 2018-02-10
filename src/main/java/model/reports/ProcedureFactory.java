@@ -1,7 +1,7 @@
 package model.reports;
 
 public class ProcedureFactory {
-    public static Procedure getINstance(){
+    public static Procedure getInstance(){
         return new ProcedureImpl();
     }
 }

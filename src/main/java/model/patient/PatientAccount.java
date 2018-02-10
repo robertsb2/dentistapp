@@ -22,6 +22,7 @@ public class PatientAccount implements Serializable {
         this.proceduresCompleted.put(p,charge);
     }
 
+
     public void addPayment(Payment payment){
         this.paymentList.add(payment);
     }

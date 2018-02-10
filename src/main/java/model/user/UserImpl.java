@@ -33,8 +33,9 @@ public class UserImpl extends PersonImpl implements User {
     }
 
 
-
-
-
-
+    @Override
+    public String toString() {
+        return super.toString() + "\n" +
+                "Username: " + this.getUsername();
+    }
 }

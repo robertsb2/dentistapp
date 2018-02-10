@@ -50,7 +50,7 @@ public class PersonImpl implements Person{
     @Override
     public String toString() {
         return  "First Name: " + this.getFirstName() + '\n' +
-                "Last Name: " + this.getLastName() + '\n';
+                "Last Name: " + this.getLastName();
 
 
     }

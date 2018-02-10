@@ -1,43 +1,41 @@
 package model.reports;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class ProductionReportRecord {
-    private Date date;
-    private Procedure procedure;
-    private int cost;
+    private LocalDate date;
+    private double total;
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-YYYY");
 
     public ProductionReportRecord() {
     }
 
-    public ProductionReportRecord(Date date, Procedure procedure, int cost) {
+    public ProductionReportRecord(double total, LocalDate date) {
         this.setDate(date);
-        this.setProcedure(procedure);
-        this.setCost(cost);
+        this.setTotal(total);
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public Procedure getProcedure() {
-        return procedure;
+
+    public double getTotal() {
+        return total;
     }
 
-    public void setProcedure(Procedure procedure) {
-        this.procedure = procedure;
+    public void setTotal(double total) {
+        this.total = total;
     }
 
-    public int getCost() {
-        return cost;
+    @Override
+    public String toString() {
+        return "Date: " + this.getDate().format(formatter) +"\n" +
+                "Total: " + this.getTotal();
     }
-
-    public void setCost(int cost) {
-        this.cost = cost;
-    }
-
 }

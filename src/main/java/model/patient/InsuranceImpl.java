@@ -40,9 +40,9 @@ public class InsuranceImpl implements Insurance {
 
     @Override
     public String toString() {
-        return "Company: " + this.getCompany() + "\n" +
-                "Group Id: " + this.getGroupId() + "\n" +
-                "Member Id: " + this.getMemberId();
+        return "\n -Company: " + this.getCompany() + "\n" +
+                " -Group Id: " + this.getGroupId() + "\n" +
+                " -Member Id: " + this.getMemberId();
     }
 
     @Override

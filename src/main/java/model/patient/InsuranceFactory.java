@@ -1,7 +1,7 @@
 package model.patient;
 
 public class InsuranceFactory {
-    public static Insurance getINstance(){
+    public static Insurance getinstance(){
         return new InsuranceImpl();
     }
 }

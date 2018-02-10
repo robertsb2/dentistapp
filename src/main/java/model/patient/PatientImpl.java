@@ -6,18 +6,19 @@ import model.PersonImpl;
 public class PatientImpl extends PersonImpl implements Patient {
     private String phone;
     private String email;
-    private InsuranceImpl insurance;
+    private Insurance insurance;
     private long cardNumber;
     private PatientAccount account;
 
     public PatientImpl() {
+        this.setAccount(new PatientAccount());
     }
 
     public PatientImpl(String firstName, String lastName, int userID, String phone, String email) {
         super(firstName, lastName, userID);
-        this.phone = phone;
-        this.email = email;
-        this.account = new PatientAccount();
+        this.setPhone(phone);
+        this.setEmail(email);
+        this.setAccount(new PatientAccount());
     }
 
     public String getPhone() {
@@ -36,11 +37,11 @@ public class PatientImpl extends PersonImpl implements Patient {
         this.email = email;
     }
 
-    public InsuranceImpl getInsurance() {
+    public Insurance getInsurance() {
         return insurance;
     }
 
-    public void setInsurance(InsuranceImpl insurance) {
+    public void setInsurance(Insurance insurance) {
         this.insurance = insurance;
     }
 
@@ -75,7 +76,7 @@ public class PatientImpl extends PersonImpl implements Patient {
             card = "Yes";
         }
         return super.toString() +
-                "Phone: " + this.getPhone() + "\n" +
+                "\nPhone: " + this.getPhone() + "\n" +
                 "Email: " + this.getPhone() + "\n" +
                 "Insurance: " + ins + "\n" +
                 "Card on file: " + card;
