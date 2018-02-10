@@ -12,7 +12,7 @@ public class ProviderImpl extends PersonImpl implements Provider {
     public ProviderImpl(String firstName, String lastName, int userID, String title) {
         super(firstName, lastName, userID);
         this.title = title;
-    }
+}
 
     public String getTitle() {
         return title;

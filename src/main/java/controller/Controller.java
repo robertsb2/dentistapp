@@ -11,13 +11,13 @@ import model.user.AdminUser;
 import model.user.AdminUserFactory;
 import model.user.User;
 import java.io.*;
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
-@SuppressWarnings("FieldCanBeLocal")
+@SuppressWarnings({"FieldCanBeLocal", "WeakerAccess", "UnusedReturnValue"})
 public class Controller {
 
     private String filename = "data.sav";
@@ -32,21 +32,18 @@ public class Controller {
     private final int PROVIDER_DATA_INDEX = 2;
     private final int PROCEDURE_DATA_INDEX = 3;
     private final int APPOINTMENT_DATA_INDEX = 4;
-    private final int LEAST_TO_GREATEST = 1;
-    private final int GREATEST_TO_LEAST = 2;
+    private final int LEAST_TO_GREATEST = 0;
+    private final int GREATEST_TO_LEAST = 1;
     private boolean login = false;
     private User currentUser;
 
 
-    public boolean isLogin(){
+    private boolean isLogin(){
         return login;
     }
 
     public boolean start() throws IOException, ClassNotFoundException {
-        if(load()){
-         return true;
-        }
-        return false;
+        return load();
     }
 
     public void setup() throws IOException {
@@ -87,14 +84,20 @@ public class Controller {
     }
 
     public User login(String username, String password){
-        for (User user : users){
-            if (user.getUsername().equals(username)){
-                if (user.getPassword().equals(password)){
-                    currentUser = user;
-                    login = true;
-                    return currentUser;
+        if(!isLogin()) {
+            for (User user : users) {
+                if (user.getUsername().equals(username)) {
+                    if (user.getPassword().equals(password)) {
+                        currentUser = user;
+                        login = true;
+                        return currentUser;
+                    }
                 }
             }
+            throw new NullPointerException("user not found");
+        } else {
+            logout();
+            login(username,password);
         }
 
         return null;
@@ -123,15 +126,21 @@ public class Controller {
 
     public void addUser(User user){
         if (isLogin()) {
-            users.add(user);
+            if (currentUser instanceof AdminUser) {
+                users.add(user);
+            } else {
+                throw new SecurityException("Restricted Access");
+            }
         } else {
             throw new SecurityException("User not logged in");
         }
     }
     public void deleteUser(User user){
         if (isLogin()) {
-            if (currentUser == user || currentUser instanceof AdminUser) {
+            if (currentUser instanceof AdminUser) {
                 users.remove(user);
+            } else {
+                throw new SecurityException("Restricted Access");
             }
         } else {
             throw new SecurityException("User not logged in");
@@ -139,18 +148,21 @@ public class Controller {
     }
     public String searchUser(String... search) {
         if (isLogin()) {
-            ArrayList<User> results = users;
+            ArrayList<User> results = (ArrayList<User>) users.clone();
             Iterator<User> itr;
             String param;
             StringBuilder resultsToString = new StringBuilder();
-            for (int i = 0; i < search.length; i++) {
+            for (String aSearch : search) {
                 itr = results.iterator();
-                param = search[i];
+                param = aSearch;
                 while (itr.hasNext()) {
                     User user = itr.next();
                     if (param.equalsIgnoreCase(user.getFirstName())) {
+                        break;
                     } else if (param.equalsIgnoreCase(user.getLastName())) {
+                        break;
                     } else if (param.equalsIgnoreCase(user.getUsername())) {
+                        break;
                     } else {
                         itr.remove();
                     }
@@ -182,18 +194,21 @@ public class Controller {
     }
     public String searchProvider(String... search){
         if (isLogin()) {
-            ArrayList<Provider> results = providers;
+            ArrayList<Provider> results = (ArrayList<Provider>) providers.clone();
             Iterator<Provider> itr;
             String param;
             StringBuilder resultsToString = new StringBuilder();
-            for (int i = 0; i < search.length; i++) {
+            for (String aSearch : search) {
                 itr = results.iterator();
-                param = search[i];
+                param = aSearch;
                 while (itr.hasNext()) {
                     Provider provider = itr.next();
                     if (param.equalsIgnoreCase(provider.getFirstName())) {
+                        break;
                     } else if (param.equalsIgnoreCase(provider.getLastName())) {
+                        break;
                     } else if (param.equalsIgnoreCase(provider.getTitle())) {
+                        break;
                     } else {
                         itr.remove();
                     }
@@ -228,14 +243,17 @@ public class Controller {
             Iterator<Appointment> itr;
             String param;
             StringBuilder resultsToString = new StringBuilder();
-            for (int i = 0; i < search.length; i++) {
+            for (String aSearch : search) {
                 itr = results.iterator();
-                param = search[i];
+                param = aSearch;
                 while (itr.hasNext()) {
                     Appointment appointment = itr.next();
                     if (param.equalsIgnoreCase(appointment.getPatient().getFirstName())) {
+                        break;
                     } else if (param.equalsIgnoreCase(appointment.getPatient().getLastName())) {
+                        break;
                     } else if (param.equalsIgnoreCase(appointment.getPatient().getInsurance().getCompany())) {
+                        break;
                     } else {
                         itr.remove();
                     }
@@ -252,7 +270,7 @@ public class Controller {
     }
     public String searchAppointments(Provider provider){
         if (isLogin()) {
-            ArrayList<Appointment> results = appointments;
+            ArrayList<Appointment> results = (ArrayList<Appointment>) appointments.clone();
             Iterator<Appointment> itr;
             StringBuilder resultsToString = new StringBuilder();
                 itr = results.iterator();
@@ -260,8 +278,11 @@ public class Controller {
                     Appointment appointment = itr.next();
                     for (Procedure procedure : appointment.getProcedures())
                     if (procedure.getProvider().getFirstName().equals(provider.getFirstName())) {
+                        break;
                     } else if (procedure.getProvider().getLastName().equals(provider.getLastName())) {
+                        break;
                     } else if (procedure.getProvider().getTitle().equals(provider.getFirstName())) {
+                        break;
                     } else {
                         itr.remove();
                     }
@@ -294,18 +315,21 @@ public class Controller {
     }
     public String searchPatient(String... search){
         if (isLogin()) {
-            ArrayList<Patient> results = patients;
+            ArrayList<Patient> results = (ArrayList<Patient>) patients.clone();
             Iterator<Patient> itr;
             String param;
             StringBuilder resultsToString = new StringBuilder();
-            for (int i = 0; i < search.length; i++) {
+            for (String aSearch : search) {
                 itr = results.iterator();
-                param = search[i];
+                param = aSearch;
                 while (itr.hasNext()) {
                     Patient patient = itr.next();
                     if (param.equalsIgnoreCase(patient.getFirstName())) {
+                        break;
                     } else if (param.equalsIgnoreCase(patient.getLastName())) {
+                        break;
                     } else if (param.equalsIgnoreCase(patient.getInsurance().getCompany())) {
+                        break;
                     } else {
                         itr.remove();
                     }
@@ -481,6 +505,47 @@ public class Controller {
                 break;
         }
         return validDate;
+    }
+
+    public Provider getProvider(int id) {
+        for (Provider provider : providers){
+            if (provider.getUserID() == id){
+                return provider;
+            }
+        }
+        throw new NullPointerException("Provider not found");
+    }
+
+    public Patient getPatient(int id) {
+        for (Patient patient : patients){
+            if (patient.getUserID() == id){
+                return patient;
+            }
+        }
+        throw new NullPointerException("Patient not found");
+    }
+
+    public Appointment getAppointment(int id) {
+        for (Appointment appointment : appointments){
+            if (appointment.getPatient().getUserID() == id){
+                return appointment;
+
+            }
+        }
+        throw new NullPointerException("Appointment not found");
+    }
+
+    public User getUser(int id) {
+        if(this.currentUser instanceof AdminUser) {
+            for (User user : users) {
+                if (user.getUserID() == id) {
+                    return user;
+                }
+            }
+        } else {
+            throw new SecurityException("Access Restricted");
+        }
+        throw new NullPointerException("user not found");
     }
 }
 

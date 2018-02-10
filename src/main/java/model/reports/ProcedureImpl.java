@@ -3,13 +3,11 @@ package model.reports;
 import model.provider.Provider;
 
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
 public class ProcedureImpl implements Procedure, Serializable{
     private String code;
-    private int cost;
+    private double cost;
     private String description;
     private LocalDate dateCompleted;
     private Provider provider;
@@ -18,7 +16,7 @@ public class ProcedureImpl implements Procedure, Serializable{
         this.setDateCompleted(LocalDate.now());
     }
 
-    public ProcedureImpl(String code, int cost, String description, LocalDate date) {
+    public ProcedureImpl(String code, double cost, String description, LocalDate date) {
         this.setCode(code);
         this.setCost(cost);
         this.setDescription(description);
@@ -41,11 +39,11 @@ public class ProcedureImpl implements Procedure, Serializable{
         this.code = code;
     }
 
-    public int getCost() {
+    public double getCost() {
         return cost;
     }
 
-    public void setCost(int cost) {
+    public void setCost(double cost) {
         this.cost = cost;
     }
 

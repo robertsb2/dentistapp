@@ -18,6 +18,6 @@ public interface Appointment extends Serializable {
 
     ArrayList<Procedure> getProcedures();
 
-    void setProcedures(ArrayList<Procedure> procedures);
+    void addProcedure(Procedure procedure);
 
 }

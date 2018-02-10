@@ -11,9 +11,9 @@ public interface Procedure extends Serializable {
 
     void setCode(String code);
 
-    int getCost();
+    double getCost();
 
-    void setCost(int cost);
+    void setCost(double cost);
 
     String getDescription();
 

@@ -22,6 +22,10 @@ public class PatientAccount implements Serializable {
         this.proceduresCompleted.put(p,charge);
     }
 
+    public HashMap<Procedure,Double> getProceduresCompleted() {
+        return proceduresCompleted;
+    }
+
 
     public void addPayment(Payment payment){
         this.paymentList.add(payment);
@@ -36,6 +40,10 @@ public class PatientAccount implements Serializable {
         return balance;
     }
 
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
     private double updateBalance() {
         double total = balance;
         for (Double value : proceduresCompleted.values()){
@@ -45,10 +53,6 @@ public class PatientAccount implements Serializable {
             total -= payment.getAmount();
         }
         return total;
-    }
-
-    public void setBalance(double balance) {
-        this.balance = balance;
     }
 
     @Override

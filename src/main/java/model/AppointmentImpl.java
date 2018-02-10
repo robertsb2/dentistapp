@@ -15,10 +15,10 @@ public class AppointmentImpl implements Appointment, Serializable {
     public AppointmentImpl() {
     }
 
-    public AppointmentImpl(LocalDate date, Patient patient, ArrayList<Procedure> procedures) {
+    public AppointmentImpl(LocalDate date, Patient patient,Procedure procedure) {
         this.setDate(date);
         this.setPatient(patient);
-        this.setProcedures(procedures);
+        this.addProcedure(procedure);
     }
 
     public LocalDate getDate() {
@@ -41,8 +41,8 @@ public class AppointmentImpl implements Appointment, Serializable {
         return procedures;
     }
 
-    public void setProcedures(ArrayList<Procedure> procedures) {
-        this.procedures = procedures;
+    public void addProcedure(Procedure procedure) {
+        this.procedures.add(procedure);
     }
 
     @Override
