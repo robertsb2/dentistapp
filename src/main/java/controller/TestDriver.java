@@ -41,14 +41,14 @@ public class TestDriver {
         }
 
         createData();
-        testUserAccess();
-        setCurrentProvider();
-        setCurrentPatient();
-        setCurrentAppointment();
-        editInfo();
-        searches();
-        addPayments();
-        getReports();
+//        testUserAccess();
+//        setCurrentProvider();
+//        setCurrentPatient();
+//        setCurrentAppointment();
+//        editInfo();
+//        searches();
+//        addPayments();
+//        getReports();
 
 
 
@@ -63,21 +63,47 @@ public class TestDriver {
     }
 
     private static void getReports() {
+        System.out.println("Collections 2/1/18-2/5/18 day");
         System.out.println(controller.getCollectionsReport(LocalDate.of(2018, 2, 1), LocalDate.of(2018, 2, 5), "day"));
+        System.out.println("");
+        System.out.println("Collections 2/1/18-2/5/18 month");
         System.out.println(controller.getCollectionsReport(LocalDate.of(2018, 2, 1), LocalDate.of(2018, 2, 5), "month"));
+        System.out.println("");
+        System.out.println("Production 2/1/18-2/10/18 day");
         System.out.println(controller.getProductionReport(LocalDate.of(2018, 2, 1), LocalDate.of(2018, 2, 10), "day"));
+        System.out.println("");
+        System.out.println("Production 2/1/18-2/10/18 month");
         System.out.println(controller.getProductionReport(LocalDate.of(2018, 2, 1), LocalDate.of(2018, 2, 10), "month"));
+        System.out.println("");
+        System.out.println("Patients least to greatest");
         System.out.println(controller.getPatientBalanceReport(LEAST_TO_GREATEST));
+        System.out.println("");
+        System.out.println("Patients greatest to least");
         System.out.println(controller.getPatientBalanceReport(GREATEST_TO_LEAST));
+        System.out.println("");
 
     }
 
     private static void searches() {
+        System.out.println();
+        System.out.println("Search user by name");
         System.out.println(controller.searchUser("Cameron"));
+        System.out.println("");
+        System.out.println("search patient by insurance");
         System.out.println(controller.searchPatient("Blue Cross"));
+        System.out.println("");
+        System.out.println("search provider by title");
         System.out.println(controller.searchProvider("Dental Assistant"));
+        System.out.println("");
+        System.out.println("search appointment by patient last name");
         System.out.println(controller.searchAppointments("Roberts"));
-//        System.out.println(controller.searchAppointments("Dentist"));
+        System.out.println("");
+        System.out.println("search appointment by code");
+        System.out.println(controller.searchAppointments("D00231"));
+        System.out.println("");
+        System.out.println("Search appointment by provider title");
+        System.out.println(controller.searchAppointments("Dental Assistant"));
+        System.out.println("");
 
     }
 
@@ -85,8 +111,12 @@ public class TestDriver {
         currentPatient.setLastName("Martel");
         currentPatient.setInsurance(InsuranceFactory.getInstance("Blue Cross",10001821,541531515));
         currentProvider.setFirstName("Jane");
+        System.out.println("Current Patient");
         System.out.println(currentPatient);
+        System.out.println("");
+        System.out.println("Current Provider");
         System.out.println(currentProvider);
+        System.out.println("");
     }
 
     public static void setCurrentProvider() {
@@ -98,13 +128,19 @@ public class TestDriver {
     }
 
     public static void setCurrentAppointment() {
-        currentAppointment = controller.getAppointment(LocalDateTime.of(LocalDate.of(2018,2,12), LocalTime.of(12,30)));
+        currentAppointment = controller.getAppointment(LocalDateTime.of(LocalDate.of(2018,2,12), LocalTime.of(9,0)));
     }
 
-    private static void testUserAccess() {
+    private static void testUserAccess() throws IOException {
         currentUser = controller.login("Mc_Roonster23", "Roony4Ever");
-        controller.changePassword(controller.getUser(405),"Admin");
-        controller.deleteUser(controller.getUser(402));
+        try{
+            controller.changePassword(controller.getUser(405),"Admin");
+            controller.deleteUser(controller.getUser(402));
+        } catch (SecurityException ex){
+            System.out.println("Security Success");
+            System.out.println("");
+        }
+
         currentUser = controller.login("Apache22", "Raptor22");
         controller.deleteUser(controller.getUser(401));
 
@@ -128,7 +164,7 @@ public class TestDriver {
 
         Procedure pro1 = ProcedureFactory.getInstance("D00231",100,"Tooth Extraction",LocalDate.now());
         Procedure pro2 = ProcedureFactory.getInstance("D05432",150,"Retainer Crown",LocalDate.now());
-        Procedure pro3 = ProcedureFactory.getInstance("D06426",900,"Root Canal",LocalDate.now());
+        Procedure pro3 = ProcedureFactory.getInstance("D06441",900,"Root Canal",LocalDate.now());
         Procedure pro4 = ProcedureFactory.getInstance("D00874",50,"Cleaning",LocalDate.now());
         Procedure pro5 = ProcedureFactory.getInstance("D78914",75,"X-ray",LocalDate.now());
         Procedure pro6 = ProcedureFactory.getInstance("D00000",75,"PlaceHolder",LocalDate.now());
@@ -145,7 +181,16 @@ public class TestDriver {
         Appointment app3 = AppointmentFactory.getInstance(LocalDate.of(2018,2,12).atTime(9,0),pat3,pro3);
         Appointment app4 = AppointmentFactory.getInstance(LocalDate.of(2018,2,13).atTime(11,45),pat4,pro4);
         Appointment app5 = AppointmentFactory.getInstance(LocalDate.of(2018,2,14).atTime(3,15),pat5,pro5);
-        Appointment app6 = AppointmentFactory.getInstance(LocalDate.of(2018,2,15).atTime(2,0),pat6,pro6);
+        Appointment app6 = AppointmentFactory.getInstance(LocalDate.of(2018,2,15).atTime(2,0)   ,pat6,pro6);
+
+
+
+        pro1.setProvider(prov1);
+        pro2.setProvider(prov2);
+        pro3.setProvider(prov3);
+        pro4.setProvider(prov4);
+        pro5.setProvider(prov5);
+        pro6.setProvider(prov6);
 
 
         controller.changePassword(currentUser, "Ch33d@r");

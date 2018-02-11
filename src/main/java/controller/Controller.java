@@ -42,10 +42,20 @@ public class Controller {
         return login;
     }
 
+    /**
+     * starts the controller and calls load method
+     * @return true if controller starts successfully
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public boolean start() throws IOException, ClassNotFoundException {
         return load();
     }
 
+    /**
+     * creates initial user and save file
+     * @throws IOException
+     */
     public void setup() throws IOException {
         currentUser = AdminUserFactory.getInstance();
         currentUser.setUsername("Administrator");
@@ -55,6 +65,10 @@ public class Controller {
 
     }
 
+    /**
+     * saves program data
+     * @throws IOException
+     */
     public void save() throws IOException {
         ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename));
         data.add(users);
@@ -83,7 +97,13 @@ public class Controller {
         return true;
     }
 
-    public User login(String username, String password){
+    /**
+     * logs user into controller
+     * @param username username to verify
+     * @param password password to verify
+     * @return matching user if username and password are correct
+     */
+    public User login(String username, String password) throws IOException {
         if(!isLogin()) {
             for (User user : users) {
                 if (user.getUsername().equals(username)) {
@@ -103,17 +123,20 @@ public class Controller {
         return null;
     }
 
-    public void logout(){
+    /**
+     * logs user out of controller
+     */
+    public void logout() throws IOException {
+        save();
         currentUser = null;
         login = false;
     }
 
-
-
-
-
-
-
+    /**
+     * handles change password requests
+     * @param user user whose password is to be changed
+     * @param newPass new password
+     */
     public void changePassword(User user,String newPass) {
         if(isLogin()) {
             if (currentUser == user || currentUser instanceof AdminUser) {
@@ -124,6 +147,10 @@ public class Controller {
         }
     }
 
+    /**
+     * adds user to database
+     * @param user User
+     */
     public void addUser(User user){
         if (isLogin()) {
             if (currentUser instanceof AdminUser) {
@@ -135,6 +162,11 @@ public class Controller {
             throw new SecurityException("User not logged in");
         }
     }
+
+    /**
+     * deletes user from database
+     * @param user User
+     */
     public void deleteUser(User user){
         if (isLogin()) {
             if (currentUser instanceof AdminUser) {
@@ -146,38 +178,50 @@ public class Controller {
             throw new SecurityException("User not logged in");
         }
     }
-    public String searchUser(String... search) {
+
+    /**
+     * searches database for a user
+     * @param search search parameter(s)
+     * @return ArrayList matching users
+     */
+    public ArrayList<User> searchUser(String... search) {
         if (isLogin()) {
             ArrayList<User> results = (ArrayList<User>) users.clone();
             Iterator<User> itr;
             String param;
-            StringBuilder resultsToString = new StringBuilder();
             for (String aSearch : search) {
                 itr = results.iterator();
                 param = aSearch;
                 while (itr.hasNext()) {
                     User user = itr.next();
                     if (param.equalsIgnoreCase(user.getFirstName())) {
-                        break;
+                        continue;
                     } else if (param.equalsIgnoreCase(user.getLastName())) {
-                        break;
+                        continue;
                     } else if (param.equalsIgnoreCase(user.getUsername())) {
-                        break;
+                        continue;
                     } else {
                         itr.remove();
                     }
                 }
             }
-            for (User user : results) {
-                resultsToString.append(user).append("\n");
-            }
-
-            return resultsToString.toString();
+            return results;
         }
         throw new SecurityException("User not logged in");
     }
 
+    /**
+     *
+     * @return ArrayList of all users
+     */
+    public ArrayList<User> getUsers() {
+        return users;
+    }
 
+    /**
+     * adds Provider to database
+     * @param provider provider
+     */
     public void addProvider(Provider provider){
         if (isLogin()) {
             providers.add(provider);
@@ -185,6 +229,11 @@ public class Controller {
             throw new SecurityException("User not logged in");
         }
     }
+
+    /**
+     * deletes Provider from database
+     * @param provider provider
+     */
     public void removeProvider(Provider provider){
         if (isLogin()) {
             providers.remove(provider);
@@ -192,12 +241,17 @@ public class Controller {
             throw new SecurityException("User not logged in");
         }
     }
-    public String searchProvider(String... search){
+
+    /**
+     * searches database for provider
+     * @param search search parameter(s)
+     * @return ArrayList of matching providers
+     */
+    public ArrayList<Provider> searchProvider(String... search){
         if (isLogin()) {
             ArrayList<Provider> results = (ArrayList<Provider>) providers.clone();
             Iterator<Provider> itr;
             String param;
-            StringBuilder resultsToString = new StringBuilder();
             for (String aSearch : search) {
                 itr = results.iterator();
                 param = aSearch;
@@ -206,23 +260,31 @@ public class Controller {
                     if (param.equalsIgnoreCase(provider.getFirstName())) {
                         break;
                     } else if (param.equalsIgnoreCase(provider.getLastName())) {
-                        break;
+                        continue;
                     } else if (param.equalsIgnoreCase(provider.getTitle())) {
-                        break;
+                        continue;
                     } else {
                         itr.remove();
                     }
                 }
             }
-            for (Provider provider : results) {
-                resultsToString.append(provider).append("\n");
-            }
-
-            return resultsToString.toString();
+            return results;
         }
         throw new SecurityException("User not logged in");
     }
 
+    /**
+     *
+     * @return ArrayList of all Providers
+     */
+    public ArrayList<Provider> getProviders() {
+        return providers;
+    }
+
+    /**
+     * add Appointment to database
+     * @param appointment Appointment
+     */
     public void addAppointment(Appointment appointment){
         if (isLogin()) {
             appointments.add(appointment);
@@ -230,6 +292,11 @@ public class Controller {
             throw new SecurityException("User not logged in");
         }
     }
+
+    /**
+     * deletes appointment from database
+     * @param appointment appointment
+     */
     public void removeAppointment(Appointment appointment){
         if (isLogin()) {
             appointments.remove(appointment);
@@ -237,68 +304,88 @@ public class Controller {
             throw new SecurityException("User not logged in");
         }
     }
-    public String searchAppointments(String... search){
+
+    /**
+     * searches database for appointments
+     * @param search search parameter(s)
+     * @return ArrayList of matching Appointments
+     */
+    public ArrayList<Appointment> searchAppointments(String... search) {
         if (isLogin()) {
-            ArrayList<Appointment> results = appointments;
+            ArrayList<Appointment> results = (ArrayList<Appointment>) appointments.clone();
             Iterator<Appointment> itr;
             String param;
-            StringBuilder resultsToString = new StringBuilder();
             for (String aSearch : search) {
                 itr = results.iterator();
                 param = aSearch;
                 while (itr.hasNext()) {
                     Appointment appointment = itr.next();
                     if (param.equalsIgnoreCase(appointment.getPatient().getFirstName())) {
-                        break;
+                        continue;
                     } else if (param.equalsIgnoreCase(appointment.getPatient().getLastName())) {
-                        break;
+                        continue;
                     } else if (param.equalsIgnoreCase(appointment.getPatient().getInsurance().getCompany())) {
-                        break;
+                        continue;
                     } else {
-                        itr.remove();
+                        for (Procedure procedure : appointment.getProcedures()) {
+                            if (param.equalsIgnoreCase(procedure.getProvider().getFirstName())) {
+                                continue;
+                            } else if (param.equalsIgnoreCase(procedure.getProvider().getLastName())) {
+                                continue;
+                            } else if (param.equalsIgnoreCase(procedure.getProvider().getTitle())) {
+                                continue;
+                            } else if (param.equalsIgnoreCase(procedure.getCode())) {
+                                continue;
+                            } else {
+                                itr.remove();
+                            }
+                        }
                     }
                 }
             }
-            for (Appointment appointment : results) {
-                resultsToString.append(appointment).append("\n");
-            }
-
-            return resultsToString.toString();
+            return results;
 
         }
         throw new SecurityException("User not logged in");
+
     }
-    public String searchAppointments(Provider provider){
-        if (isLogin()) {
+
+    /**
+     * searches database for Appointments in a certain time range
+     * @param start start date
+     * @param end end date
+     * @return ArrayList of matching appointments
+     */
+    public ArrayList<Appointment> searchAppointments(LocalDateTime start, LocalDateTime end){
+        if(isLogin()) {
             ArrayList<Appointment> results = (ArrayList<Appointment>) appointments.clone();
             Iterator<Appointment> itr;
-            StringBuilder resultsToString = new StringBuilder();
-                itr = results.iterator();
-                while (itr.hasNext()) {
-                    Appointment appointment = itr.next();
-                    for (Procedure procedure : appointment.getProcedures())
-                    if (procedure.getProvider().getFirstName().equals(provider.getFirstName())) {
-                        break;
-                    } else if (procedure.getProvider().getLastName().equals(provider.getLastName())) {
-                        break;
-                    } else if (procedure.getProvider().getTitle().equals(provider.getFirstName())) {
-                        break;
-                    } else {
-                        itr.remove();
-                    }
-
+            itr = results.iterator();
+            while (itr.hasNext()) {
+                Appointment appointment = itr.next();
+                if (appointment.getDate().isAfter(start) && appointment.getDate().isBefore(end)){
+                    continue;
+                } else {
+                    itr.remove();
+                }
             }
-            for (Appointment appointment : results) {
-                resultsToString.append(appointment).append("\n");
-            }
-
-            return resultsToString.toString();
-
+            return results;
         }
         throw new SecurityException("User not logged in");
     }
 
+    /**
+     *
+     * @return ArrayList of all appointments
+     */
+    public ArrayList<Appointment> getAppointments() {
+        return appointments;
+    }
 
+    /**
+     * add Patient to database
+     * @param patient patient
+     */
     public void addPatient(Patient patient){
         if (isLogin()) {
             patients.add(patient);
@@ -306,6 +393,11 @@ public class Controller {
             throw new SecurityException("User not logged in");
         }
     }
+
+    /**
+     * deletes patient from database
+     * @param patient patient
+     */
     public void removePatient(Patient patient){
         if (isLogin()) {
             patients.remove(patient);
@@ -313,39 +405,50 @@ public class Controller {
             throw new SecurityException("User not logged in");
         }
     }
-    public String searchPatient(String... search){
+
+    /**
+     * searches database for patients
+     * @param search search parameter(s)
+     * @return ArrayList of matching Patients
+     */
+    public ArrayList<Patient> searchPatient(String... search){
         if (isLogin()) {
             ArrayList<Patient> results = (ArrayList<Patient>) patients.clone();
             Iterator<Patient> itr;
             String param;
-            StringBuilder resultsToString = new StringBuilder();
             for (String aSearch : search) {
                 itr = results.iterator();
                 param = aSearch;
                 while (itr.hasNext()) {
                     Patient patient = itr.next();
                     if (param.equalsIgnoreCase(patient.getFirstName())) {
-                        break;
+                        continue;
                     } else if (param.equalsIgnoreCase(patient.getLastName())) {
-                        break;
+                        continue;
                     } else if (param.equalsIgnoreCase(patient.getInsurance().getCompany())) {
-                        break;
+                        continue;
                     } else {
                         itr.remove();
                     }
                 }
             }
-            for (Patient patient : results) {
-                resultsToString.append(patient).append("\n");
-            }
-
-            return resultsToString.toString();
+            return results;
         }
         throw new SecurityException("User not logged in");
     }
 
+    /**
+     *
+     * @return ArrayList of all patients
+     */
+    public ArrayList<Patient> getPatients() {
+        return patients;
+    }
 
-
+    /**
+     * adds procedure to the database
+     * @param procedure procedure
+     */
     public void addProcedure(Procedure procedure){
         if (isLogin()) {
             procedures.add(procedure);
@@ -353,6 +456,11 @@ public class Controller {
             throw new SecurityException("User not logged in");
         }
     }
+
+    /**
+     * deletes procedure from database
+     * @param procedure
+     */
     public void removeProcedure(Procedure procedure){
         if (isLogin()) {
             procedures.remove(procedure);
@@ -361,8 +469,21 @@ public class Controller {
         }
     }
 
+    /**
+     *
+     * @return ArrayList of all procedures
+     */
+    public ArrayList<Procedure> getProcedures() {
+        return procedures;
+    }
 
-
+    /**
+     * generates report of all payments collected
+     * @param start start date of report range
+     * @param end end date of report range
+     * @param sortType report summary type either day or month
+     * @return report of all payments
+     */
     public CollectionsReport getCollectionsReport(LocalDate start, LocalDate end, String sortType) {
         if (isLogin()) {
             CollectionsReport report = new CollectionsReport(start, end, sortType);
@@ -401,6 +522,14 @@ public class Controller {
         }
         throw new SecurityException("User not logged in");
     }
+
+    /**
+     * generates report of revenue produced
+     * @param start start date of report range
+     * @param end end date of report range
+     * @param sortType report summary type either day or month
+     * @return report of production values
+     */
     public ProductionReport getProductionReport(LocalDate start, LocalDate end, String sortType){
         if (isLogin()) {
             ProductionReport report = new ProductionReport(start, end, sortType);
@@ -425,7 +554,9 @@ public class Controller {
                     double total = 0;
                     for (Patient patient : patients) {
                         for (Procedure key : patient.getAccount().getProceduresCompleted().keySet()) {
-                            if (date.isEqual(key.getDateCompleted())) {
+                            if (key.getDateCompleted().getMonth() == date.getMonth() &&
+                                    key.getDateCompleted().isBefore(report.getEndDate()) &&
+                                    key.getDateCompleted().isAfter(report.getStartDate())) {
                                 total += patient.getAccount().getProceduresCompleted().get(key);
 
 
@@ -439,13 +570,18 @@ public class Controller {
         }
         throw new SecurityException("User not logged in");
     }
+
+    /**
+     * generates report of all patient balances
+     * @param sorting integer representing sort type: 0: least to greatest or 1: from greatest to least
+     * @return report of patient balances
+     */
     public PatientReport getPatientBalanceReport(int sorting){
         if (isLogin()) {
             PatientReport report = new PatientReport();
             for (Patient patient : patients) {
                 double balance = patient.getAccount().getBalance();
-                String name = patient.getFirstName() + " " + patient.getLastName();
-                report.add(new PatientReportRecord(name, balance));
+                report.add(new PatientReportRecord(patient, balance));
             }
             switch (sorting) {
                 case LEAST_TO_GREATEST:
@@ -461,6 +597,67 @@ public class Controller {
         throw new SecurityException("User not logged in");
     }
 
+    /**
+     *
+     * @param id unique user id
+     * @return provider
+     */
+    public Provider getProvider(int id) {
+        for (Provider provider : providers){
+            if (provider.getUserID() == id){
+                return provider;
+            }
+        }
+        throw new NullPointerException("Provider not found");
+    }
+
+    /**
+     *
+     * @param id unique user id
+     * @return patient
+     */
+    public Patient getPatient(int id) {
+        for (Patient patient : patients){
+            if (patient.getUserID() == id){
+                return patient;
+            }
+        }
+        throw new NullPointerException("Patient not found");
+    }
+
+    /**
+     *
+     * @param localDateTime date and time of appointment
+     * @return appointment
+     */
+    public Appointment getAppointment(LocalDateTime localDateTime) {
+        for (Appointment appointment : appointments){
+            if (appointment.getDate().isEqual(localDateTime)){
+                return appointment;
+
+            }
+        }
+        throw new NullPointerException("Appointment not found");
+    }
+
+    /**
+     *
+     * @param id unique user id
+     * @return user
+     */
+    public User getUser(int id) {
+        if(this.currentUser instanceof AdminUser) {
+            for (User user : users) {
+                if (user.getUserID() == id) {
+                    return user;
+                }
+            }
+        } else {
+            throw new SecurityException("Access Restricted");
+        }
+        throw new NullPointerException("user not found");
+    }
+
     private LocalDate getValidMonth(LocalDate date) {
         LocalDate validMonth = date;
         if (date.getMonth().getValue() < 12){
@@ -468,6 +665,7 @@ public class Controller {
         }
         return validMonth;
     }
+
     private LocalDate getValidDay(LocalDate date) {
         LocalDate validDate = date;
         switch (date.getMonth().getValue()){
@@ -505,47 +703,6 @@ public class Controller {
                 break;
         }
         return validDate;
-    }
-
-    public Provider getProvider(int id) {
-        for (Provider provider : providers){
-            if (provider.getUserID() == id){
-                return provider;
-            }
-        }
-        throw new NullPointerException("Provider not found");
-    }
-
-    public Patient getPatient(int id) {
-        for (Patient patient : patients){
-            if (patient.getUserID() == id){
-                return patient;
-            }
-        }
-        throw new NullPointerException("Patient not found");
-    }
-
-    public Appointment getAppointment(LocalDateTime localDateTime) {
-        for (Appointment appointment : appointments){
-            if (appointment.getDate().isEqual(localDateTime)){
-                return appointment;
-
-            }
-        }
-        throw new NullPointerException("Appointment not found");
-    }
-
-    public User getUser(int id) {
-        if(this.currentUser instanceof AdminUser) {
-            for (User user : users) {
-                if (user.getUserID() == id) {
-                    return user;
-                }
-            }
-        } else {
-            throw new SecurityException("Access Restricted");
-        }
-        throw new NullPointerException("user not found");
     }
 }
 
