@@ -4,7 +4,6 @@ import model.provider.Provider;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.regex.Pattern;
 
 public class ProcedureImpl implements Procedure, Serializable{
@@ -125,7 +124,9 @@ public class ProcedureImpl implements Procedure, Serializable{
      * @param dateCompleted date completed
      */
     public void setDateCompleted(LocalDate dateCompleted){
-        if (dateCompleted.isAfter(LocalDate.now()))
+        if (dateCompleted.isAfter(LocalDate.now().plusDays(1))){
+            throw new IllegalArgumentException("Completion date cannot be set for the future");
+        }
         this.dateCompleted = dateCompleted;
     }
 

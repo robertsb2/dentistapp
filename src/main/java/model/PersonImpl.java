@@ -95,7 +95,8 @@ public class PersonImpl implements Person{
     @Override
     public String toString() {
         return  "First Name: " + this.getFirstName() + '\n' +
-                "Last Name: " + this.getLastName();
+                "Last Name: " + this.getLastName() + '\n' +
+                "User Id: " + this.getUserID();
 
 
     }

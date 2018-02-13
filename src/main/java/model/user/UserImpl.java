@@ -1,7 +1,7 @@
 package model.user;
 
 import model.PersonImpl;
-import model.patient.Patient;
+
 
 import java.util.regex.Pattern;
 
@@ -66,7 +66,7 @@ public class UserImpl extends PersonImpl implements User {
      * @param password User's password
      */
     public void setPassword(String password) {
-        if (!Pattern.matches("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\\\S+$).{8,}",password)){
+        if (!Pattern.matches("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}",password)){
             throw new IllegalArgumentException("password does not meet minimum requirements");
         }
         this.password = password;

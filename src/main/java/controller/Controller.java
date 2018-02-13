@@ -32,8 +32,8 @@ public class Controller {
     private final int PROVIDER_DATA_INDEX = 2;
     private final int PROCEDURE_DATA_INDEX = 3;
     private final int APPOINTMENT_DATA_INDEX = 4;
-    private final int LEAST_TO_GREATEST = 0;
-    private final int GREATEST_TO_LEAST = 1;
+    private final int CHOICE_ONE = 1;
+    private final int CHOICE_TWO = 2;
     private boolean login = false;
     private User currentUser;
 
@@ -60,8 +60,9 @@ public class Controller {
         currentUser = AdminUserFactory.getInstance();
         currentUser.setUsername("Administrator");
         currentUser.setPassword("1234Password");
+        currentUser.setUserID(1);
         users.add(currentUser);
-//        save();
+        save();
 
     }
 
@@ -77,7 +78,6 @@ public class Controller {
         data.add(procedures);
         data.add(appointments);
         out.writeObject(data);
-        System.out.println("Save Runs");
     }
 
     private boolean load() throws IOException, ClassNotFoundException {
@@ -306,72 +306,50 @@ public class Controller {
     }
 
     /**
-     * searches database for appointments
-     * @param search search parameter(s)
-     * @return ArrayList of matching Appointments
+     * searches database for matching appointments
+     * @param start start date
+     * @param end end date
+     * @param patient patient
+     * @param provider provider
+     * @param code procedure code
+     * @return
      */
-    public ArrayList<Appointment> searchAppointments(String... search) {
+    public ArrayList<Appointment> searchAppointments(LocalDate start, LocalDate end, Patient patient, Provider provider, String code) {
         if (isLogin()) {
             ArrayList<Appointment> results = (ArrayList<Appointment>) appointments.clone();
-            Iterator<Appointment> itr;
-            String param;
-            for (String aSearch : search) {
-                itr = results.iterator();
-                param = aSearch;
-                while (itr.hasNext()) {
-                    Appointment appointment = itr.next();
-                    if (param.equalsIgnoreCase(appointment.getPatient().getFirstName())) {
-                        continue;
-                    } else if (param.equalsIgnoreCase(appointment.getPatient().getLastName())) {
-                        continue;
-                    } else if (param.equalsIgnoreCase(appointment.getPatient().getInsurance().getCompany())) {
-                        continue;
-                    } else {
-                        for (Procedure procedure : appointment.getProcedures()) {
-                            if (param.equalsIgnoreCase(procedure.getProvider().getFirstName())) {
-                                continue;
-                            } else if (param.equalsIgnoreCase(procedure.getProvider().getLastName())) {
-                                continue;
-                            } else if (param.equalsIgnoreCase(procedure.getProvider().getTitle())) {
-                                continue;
-                            } else if (param.equalsIgnoreCase(procedure.getCode())) {
-                                continue;
-                            } else {
-                                itr.remove();
-                            }
+            for (Appointment appointment : appointments){
+                if (start != null && appointment.getDate().isBefore(start.atStartOfDay())){
+                    results.remove(appointment);
+                } else if (end != null && appointment.getDate().isAfter(end.plusDays(1).atStartOfDay())){
+                    results.remove(appointment);
+                } else if (patient != null && appointment.getPatient() != patient){
+                    results.remove(appointment);
+                } else if (provider != null){
+                    int i = 0;
+                    for (Procedure procedure : appointment.getProcedures()){
+                        if (provider != procedure.getProvider()){
+                            i++;
                         }
+                    }
+                    if (i == appointment.getProcedures().size()){
+                        results.remove(appointment);
+                    }
+                } else if (code != null){
+                    int i = 0;
+                    for (Procedure procedure : appointment.getProcedures()){
+                        if (!code.equalsIgnoreCase(procedure.getCode())){
+                            i++;
+                        }
+                    }
+                    if (i == appointment.getProcedures().size()){
+                        results.remove(appointment);
                     }
                 }
             }
             return results;
-
         }
         throw new SecurityException("User not logged in");
 
-    }
-
-    /**
-     * searches database for Appointments in a certain time range
-     * @param start start date
-     * @param end end date
-     * @return ArrayList of matching appointments
-     */
-    public ArrayList<Appointment> searchAppointments(LocalDateTime start, LocalDateTime end){
-        if(isLogin()) {
-            ArrayList<Appointment> results = (ArrayList<Appointment>) appointments.clone();
-            Iterator<Appointment> itr;
-            itr = results.iterator();
-            while (itr.hasNext()) {
-                Appointment appointment = itr.next();
-                if (appointment.getDate().isAfter(start) && appointment.getDate().isBefore(end)){
-                    continue;
-                } else {
-                    itr.remove();
-                }
-            }
-            return results;
-        }
-        throw new SecurityException("User not logged in");
     }
 
     /**
@@ -484,9 +462,15 @@ public class Controller {
      * @param sortType report summary type either day or month
      * @return report of all payments
      */
-    public CollectionsReport getCollectionsReport(LocalDate start, LocalDate end, String sortType) {
+    public CollectionsReport getCollectionsReport(LocalDate start, LocalDate end, int sortType) {
         if (isLogin()) {
-            CollectionsReport report = new CollectionsReport(start, end, sortType);
+            String grouping;
+            if (sortType == CHOICE_ONE){
+                grouping = "day";
+            } else {
+                grouping = "month";
+            }
+            CollectionsReport report = new CollectionsReport(start, end, grouping);
             if (report.getGrouping().equalsIgnoreCase("day")) {
                 for (LocalDate date = report.getStartDate(); date.isBefore(report.getEndDate()); date = getValidDay(date)) {
                     double total = 0;
@@ -530,9 +514,15 @@ public class Controller {
      * @param sortType report summary type either day or month
      * @return report of production values
      */
-    public ProductionReport getProductionReport(LocalDate start, LocalDate end, String sortType){
+    public ProductionReport getProductionReport(LocalDate start, LocalDate end, int sortType){
         if (isLogin()) {
-            ProductionReport report = new ProductionReport(start, end, sortType);
+            String grouping;
+            if (sortType == CHOICE_ONE){
+                grouping = "day";
+            } else {
+                grouping = "month";
+            }
+            ProductionReport report = new ProductionReport(start, end, grouping);
             if (report.getGrouping().equalsIgnoreCase("day")) {
                 for (LocalDate date = report.getStartDate(); date.isBefore(report.getEndDate()); date = getValidDay(date)) {
                     double total = 0;
@@ -584,10 +574,10 @@ public class Controller {
                 report.add(new PatientReportRecord(patient, balance));
             }
             switch (sorting) {
-                case LEAST_TO_GREATEST:
+                case CHOICE_ONE:
                     Collections.sort(report);
                     break;
-                case GREATEST_TO_LEAST:
+                case CHOICE_TWO:
                     Collections.sort(report);
                     Collections.reverse(report);
             }
@@ -623,6 +613,15 @@ public class Controller {
             }
         }
         throw new NullPointerException("Patient not found");
+    }
+
+    public Procedure getProcedure(String code){
+        for (Procedure procedure : procedures){
+            if (procedure.getCode().equalsIgnoreCase(code)){
+                return procedure;
+            }
+        }
+        throw new  NullPointerException("Procedure not found");
     }
 
     /**

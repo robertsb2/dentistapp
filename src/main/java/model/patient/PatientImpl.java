@@ -36,7 +36,7 @@ public class PatientImpl extends PersonImpl implements Patient {
         this.setPhone(phone);
         this.setEmail(email);
         this.setAccount(new PatientAccount());
-        this.setInsurance(InsuranceFactory.getInstance("None",0,0));
+        this.setInsurance(InsuranceFactory.getInstance("None",1,1));
     }
 
     /**
@@ -52,7 +52,7 @@ public class PatientImpl extends PersonImpl implements Patient {
      * @param phone number
      */
     public void setPhone(String phone) {
-        if (!Pattern.matches("\\d\\d\\d\\d\\d\\d\\d\\d\\d\\d",phone)){
+        if (!Pattern.matches("\\d\\d\\d-\\d\\d\\d-\\d\\d\\d\\d",phone)){
             throw new IllegalArgumentException("Invalid phone number");
         }
         this.phone = phone;

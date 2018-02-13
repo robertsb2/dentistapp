@@ -15,23 +15,21 @@ import model.user.UserFactory;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.util.ArrayList;
 
 
 public class TestDriver {
-    static Controller controller = new Controller();
-    static User currentUser;
-    static Provider currentProvider;
-    static Patient currentPatient;
-    static Appointment currentAppointment;
-    private static final int LEAST_TO_GREATEST = 0;
-    private static final int GREATEST_TO_LEAST = 1;
+    private static Controller controller = new Controller();
+    private static User currentUser;
+    private static Provider currentProvider;
+    private static Patient currentPatient;
+    private static final int LEAST_TO_GREATEST = 1;
+    private static final int GREATEST_TO_LEAST = 2;
 
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         if (controller.start()) {
-            currentUser = controller.login("B_Roberts", "Ch33d@r");
+            currentUser = controller.login("B_Roberts", "Ch33d@rS");
         } else {
             controller.setup();
             currentUser = controller.login("Administrator", "1234Password");
@@ -39,16 +37,14 @@ public class TestDriver {
             currentUser.setFirstName("Bryan");
             currentUser.setLastName("Roberts");
         }
-
         createData();
-//        testUserAccess();
-//        setCurrentProvider();
-//        setCurrentPatient();
-//        setCurrentAppointment();
-//        editInfo();
-//        searches();
-//        addPayments();
-//        getReports();
+        testUserAccess();
+        setCurrentProvider();
+        setCurrentPatient();
+        editInfo();
+        searches();
+        addPayments();
+        getReports();
 
 
 
@@ -64,16 +60,16 @@ public class TestDriver {
 
     private static void getReports() {
         System.out.println("Collections 2/1/18-2/5/18 day");
-        System.out.println(controller.getCollectionsReport(LocalDate.of(2018, 2, 1), LocalDate.of(2018, 2, 5), "day"));
+        System.out.println(controller.getCollectionsReport(LocalDate.of(2019, 2, 1), LocalDate.of(2019, 2, 5), 1));
         System.out.println("");
         System.out.println("Collections 2/1/18-2/5/18 month");
-        System.out.println(controller.getCollectionsReport(LocalDate.of(2018, 2, 1), LocalDate.of(2018, 2, 5), "month"));
+        System.out.println(controller.getCollectionsReport(LocalDate.of(2019, 2, 1), LocalDate.of(2019, 2, 5), 2));
         System.out.println("");
         System.out.println("Production 2/1/18-2/10/18 day");
-        System.out.println(controller.getProductionReport(LocalDate.of(2018, 2, 1), LocalDate.of(2018, 2, 10), "day"));
+        System.out.println(controller.getProductionReport(LocalDate.of(2019, 2, 1), LocalDate.of(2019, 2, 10), 1));
         System.out.println("");
         System.out.println("Production 2/1/18-2/10/18 month");
-        System.out.println(controller.getProductionReport(LocalDate.of(2018, 2, 1), LocalDate.of(2018, 2, 10), "month"));
+        System.out.println(controller.getProductionReport(LocalDate.of(2019, 2, 1), LocalDate.of(2019, 2, 10), 2));
         System.out.println("");
         System.out.println("Patients least to greatest");
         System.out.println(controller.getPatientBalanceReport(LEAST_TO_GREATEST));
@@ -95,14 +91,11 @@ public class TestDriver {
         System.out.println("search provider by title");
         System.out.println(controller.searchProvider("Dental Assistant"));
         System.out.println("");
-        System.out.println("search appointment by patient last name");
-        System.out.println(controller.searchAppointments("Roberts"));
-        System.out.println("");
-        System.out.println("search appointment by code");
-        System.out.println(controller.searchAppointments("D00231"));
-        System.out.println("");
-        System.out.println("Search appointment by provider title");
-        System.out.println(controller.searchAppointments("Dental Assistant"));
+        System.out.println("search appointments");
+        ArrayList<Appointment> results = controller.searchAppointments(null,LocalDate.of(2019,2,14),currentPatient,currentProvider,"D05432");
+        for (Appointment appointment : results){
+            System.out.println(appointment.getDate() + ", " + appointment.getPatient().getFirstName() + ", " + appointment.getProcedures().size());
+        }
         System.out.println("");
 
     }
@@ -119,16 +112,12 @@ public class TestDriver {
         System.out.println("");
     }
 
-    public static void setCurrentProvider() {
-        currentProvider = controller.getProvider(804);
+    private static void setCurrentProvider() {
+        currentProvider = controller.getProvider(803);
     }
 
-    public static void setCurrentPatient() {
+    private static void setCurrentPatient() {
         currentPatient = controller.getPatient(103);
-    }
-
-    public static void setCurrentAppointment() {
-        currentAppointment = controller.getAppointment(LocalDateTime.of(LocalDate.of(2018,2,12), LocalTime.of(9,0)));
     }
 
     private static void testUserAccess() throws IOException {
@@ -149,10 +138,10 @@ public class TestDriver {
 
     private static void createData(){
         User user1 = UserFactory.getInstance("Mickey", "Rooney", 401, "Mc_Roonster23", "Roony4Ever");
-        User user2 = UserFactory.getInstance("Kevin", "James", 402, "Mr_FunnyPants", "IamNOTshort");
-        User user3 = UserFactory.getInstance("Levar", "Burton", 403, "ReaderMan", "RR4LYFE");
+        User user2 = UserFactory.getInstance("Kevin", "James", 402, "Mr_FunnyPants", "IamNOTshort5");
+        User user3 = UserFactory.getInstance("Levar", "Burton", 403, "ReaderMan", "RR45Lyfe");
         AdminUser user4 = AdminUserFactory.getInstance("Cameron", "Christenson", 404, "Apache22", "Raptor22");
-        AdminUser user5 = AdminUserFactory.getInstance("Lawrence", "Welk", 405, "Jazzy", "Elephants");
+        AdminUser user5 = AdminUserFactory.getInstance("Lawrence", "Welk", 405, "Jazzy", "Elephants2");
 
 
         Patient pat1 = PatientFactory.getInstance("Bryan", "Roberts", 101, "208-360-1348", "broberts@student.neumont.edu");
@@ -160,7 +149,7 @@ public class TestDriver {
         Patient pat3 = PatientFactory.getInstance("Shelby", "Martel", 103, "208-360-1516", "shelby_mr@hotmail.com");
         Patient pat4 = PatientFactory.getInstance("Deb", "Roberts", 104, "208-716-4793", "cd5k@cableone.net");
         Patient pat5 = PatientFactory.getInstance("Cory", "Roberts", 105, "208-390-0643", "cd5k@cableone.net");
-        Patient pat6 = PatientFactory.getInstance("Test", "Patient", 106, "Phone", "email");
+
 
         Procedure pro1 = ProcedureFactory.getInstance("D00231",100,"Tooth Extraction",LocalDate.now());
         Procedure pro2 = ProcedureFactory.getInstance("D05432",150,"Retainer Crown",LocalDate.now());
@@ -174,26 +163,34 @@ public class TestDriver {
         Provider prov3 = ProviderFactory.getInstance("Leonard","Williams",803,"Dental Assistant");
         Provider prov4 = ProviderFactory.getInstance("Margaret","Thatcher",804,"Dental Hygienist");
         Provider prov5 = ProviderFactory.getInstance("Amanda","Lee",805,"Dental Assistant");
-        Provider prov6 = ProviderFactory.getInstance("Test","Name",806,"Title");
 
-        Appointment app1 = AppointmentFactory.getInstance(LocalDate.of(2018,2,10).atTime(12,30),pat1,pro1);
-        Appointment app2 = AppointmentFactory.getInstance(LocalDate.of(2018,2,11).atTime(2,15),pat2,pro2);
-        Appointment app3 = AppointmentFactory.getInstance(LocalDate.of(2018,2,12).atTime(9,0),pat3,pro3);
-        Appointment app4 = AppointmentFactory.getInstance(LocalDate.of(2018,2,13).atTime(11,45),pat4,pro4);
-        Appointment app5 = AppointmentFactory.getInstance(LocalDate.of(2018,2,14).atTime(3,15),pat5,pro5);
-        Appointment app6 = AppointmentFactory.getInstance(LocalDate.of(2018,2,15).atTime(2,0)   ,pat6,pro6);
+
+        Appointment app1 = AppointmentFactory.getInstance(LocalDate.of(2019,2,13).atTime(12,30),pat3,pro1);
+        Appointment app2 = AppointmentFactory.getInstance(LocalDate.of(2019,2,14).atTime(2,15),pat3,pro2);
+        Appointment app3 = AppointmentFactory.getInstance(LocalDate.of(2019,2,12).atTime(14,30),pat3,pro2);
+        Appointment app4 = AppointmentFactory.getInstance(LocalDate.of(2019,2,13).atTime(11,45),pat3,pro4);
+        Appointment app5 = AppointmentFactory.getInstance(LocalDate.of(2019,2,14).atTime(3,15),pat3,pro5);
+
 
 
 
         pro1.setProvider(prov1);
-        pro2.setProvider(prov2);
+        pro2.setProvider(prov3);
         pro3.setProvider(prov3);
         pro4.setProvider(prov4);
         pro5.setProvider(prov5);
-        pro6.setProvider(prov6);
 
 
-        controller.changePassword(currentUser, "Ch33d@r");
+
+
+        pat1.getAccount().addProcedure(pro1,20);
+        pat2.getAccount().addProcedure(pro1,20);
+        pat3.getAccount().addProcedure(pro1,20);
+        pat4.getAccount().addProcedure(pro1,20);
+        pat5.getAccount().addProcedure(pro1,20);
+
+
+        controller.changePassword(currentUser, "Ch33d@rS");
 
         controller.addUser(user1);
         controller.addUser(user2);
@@ -214,24 +211,24 @@ public class TestDriver {
         controller.addProvider(prov3);
         controller.addProvider(prov4);
         controller.addProvider(prov5);
-        controller.addProvider(prov6);
-        controller.removeProvider(prov6);
+//        controller.addProvider(prov6);
+//        controller.removeProvider(prov6);
 
         controller.addPatient(pat1);
         controller.addPatient(pat2);
         controller.addPatient(pat3);
         controller.addPatient(pat4);
         controller.addPatient(pat5);
-        controller.addPatient(pat6);
-        controller.removePatient(pat6);
+//        controller.addPatient(pat6);
+//        controller.removePatient(pat6);
 
         controller.addAppointment(app1);
         controller.addAppointment(app2);
         controller.addAppointment(app3);
         controller.addAppointment(app4);
         controller.addAppointment(app5);
-        controller.addAppointment(app6);
-        controller.removeAppointment(app6);
+//        controller.addAppointment(app6);
+//        controller.removeAppointment(app6);
 
     }
 

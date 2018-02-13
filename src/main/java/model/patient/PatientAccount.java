@@ -1,8 +1,11 @@
 package model.patient;
 
 import model.reports.Procedure;
+import model.reports.ProcedureFactory;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -36,6 +39,13 @@ public class PatientAccount implements Serializable {
         }
         if(charge > p.getCost()){
             throw new IllegalArgumentException("charge cannot exceed standard cost");
+        }
+        Procedure procedure;
+        procedure = p;
+        try {
+            procedure.setDateCompleted(LocalDate.now());
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
         this.proceduresCompleted.put(p,charge);
     }

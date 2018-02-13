@@ -75,7 +75,7 @@ public class CollectionsReport extends ArrayList<CollectionsReportRecord>{
     public void setGrouping(String grouping) {
         if (!grouping.equalsIgnoreCase("day") &&
                 !grouping.equalsIgnoreCase("month")){
-            throw new IllegalArgumentException("grouping must be either 'day' or 'month'");
+            throw new IllegalArgumentException("grouping must be either 'day' or month");
         }
         this.grouping = grouping;
     }
